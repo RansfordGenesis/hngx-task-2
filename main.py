@@ -64,3 +64,16 @@ def update_person(person_id: int, updated_person: schemas.PersonBase,
     db.commit()
     db.refresh(db_person)
     return db_person
+
+
+@app.delete("/api/{person_id}", response_model=dict)
+def delete_person(person_id: int, db: Session = Depends(get_db)):
+    db_person = crud.get_person(db, person_id=person_id)
+    
+    if db_person is None:
+        raise HTTPException(status_code=404, detail="Person not found")
+
+    db.delete(db_person)
+    db.commit()
+
+    return {"message": "Person deleted successfully"}
