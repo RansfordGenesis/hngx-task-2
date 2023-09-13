@@ -47,3 +47,20 @@ def read_person(person_id: int, db: Session = Depends(get_db)):
     if db_person is None:
         raise HTTPException(status_code=404, detail="person not found")
     return db_person
+
+
+@app.put("/api/{person_id}", response_model=schemas.Person)
+def update_person(person_id: int, updated_person: schemas.PersonBase, 
+        db: Session = Depends(get_db)):
+    
+    db_person = crud.get_person(db, person_id=person_id)
+    if db_person is None:
+        raise HTTPException(status_code=404, detail="Person not found")
+
+    updated_person_dict = updated_person.dict(exclude_unset=True)
+    for field, value in updated_person_dict.items():
+        setattr(db_person, field, value)
+
+    db.commit()
+    db.refresh(db_person)
+    return db_person
