@@ -38,6 +38,8 @@ def get_db():
 
 @app.post("/api", response_model=schemas.Person)
 def create_person(person: schemas.PersonCreate, db: Session = Depends(get_db)):
+    if not person.name:
+        raise HTTPException(status_code=400, detail="Name is required")
     return crud.create_person(db=db, person=person)
 
 
