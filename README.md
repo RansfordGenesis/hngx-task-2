@@ -73,7 +73,7 @@ Endpoints
 ```json
 {
     "id": 1,
-    "name": "John Doe"
+    "name": "Ransford Genesis"
 }
 ```
 
